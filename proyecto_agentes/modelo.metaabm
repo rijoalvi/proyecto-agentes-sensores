@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metaabm:SContext xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:act="http://metaabm.org/act" xmlns:function="http://metaabm.org/function" xmlns:metaabm="http://metaabm.org/structure" label="modelo" ID="modelo" pluralLabel="modelos">
+  <attributes label="Sensor Ambiental Count" ID="sensorAmbientalCount" pluralLabel="Sensor Ambiental Counts" description="The number of sensor ambientals to create." defaultValue="100"/>
+  <rootActivity xsi:type="act:AGroup" label="Actions" ID="actions" pluralLabel="Actionss">
+    <members xsi:type="act:ABuild" label="Build modelo" ID="buildmodelo" targets="//@rootActivity/@members[ID='createSensorAmbientals'] //@rootActivity/@members[ID='buildGrids']" selected="//@rootActivity/@members[ID='buildmodelo']" agent="/" pluralLabel="Build modelos"/>
+    <members xsi:type="act:ACreateAgents" label="Create Sensor Ambientals" ID="createSensorAmbientals" sources="//@rootActivity/@members[ID='buildmodelo']" selected="//@rootActivity/@members[ID='buildmodelo']" agent="//@agents[ID='sensorAmbiental']" agentCount="//@attributes[ID='sensorAmbientalCount']"/>
+    <members xsi:type="act:ABuildGrid" label="Build Grids" ID="buildGrids" sources="//@rootActivity/@members[ID='buildmodelo']" selected="//@rootActivity/@members[ID='buildmodelo']" pluralLabel="Build Gridss" agents="//@agents[ID='sensorAmbiental']" projection="//@projections[ID='espacio']"/>
+  </rootActivity>
+  <implementation package="proyecto_agentes" className="Modelo" basePath=""/>
+  <agents label="Sensor Ambiental" ID="sensorAmbiental" pluralLabel="Sensores Ambientales">
+    <rootActivity xsi:type="act:AGroup" label="Actions" ID="actions" pluralLabel="Actionss">
+      <members xsi:type="act:AInitialize" label="Initialize" ID="initialize" targets="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='sensorAmbiental']" selected="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='initialize']" agent="//@agents[ID='sensorAmbiental']" space="//@projections[ID='espacio']" pluralLabel="Initializes"/>
+      <members xsi:type="act:ASelect" label="Sensor Ambiental" ID="sensorAmbiental" sources="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='initialize']" targets="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='availableQuery']" selected="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='initialize']" space="//@projections[ID='espacio']"/>
+      <members xsi:type="act:AQuery" label="Available() Query" ID="availableQuery" sources="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='sensorAmbiental']" targets="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='moveSensorAmbiental']" selected="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='sensorAmbiental']">
+        <function xsi:type="function:FGenericLogical" href="http://metaabm.org/core_library.metaabm#//@library[ID='coreFunctions']/@subs[ID='spatial']/@functions[ID='available']"/>
+      </members>
+      <members xsi:type="act:AMove" label="Move Sensor Ambiental" ID="moveSensorAmbiental" sources="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='availableQuery']" selected="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='initialize']" destination="//@agents[ID='sensorAmbiental']/@rootActivity/@members[ID='sensorAmbiental']"/>
+    </rootActivity>
+    <implementation className="SensorAmbiental"/>
+    <styles xsi:type="metaabm:SStyle2D" label="Sensor Ambiental Style 2D" ID="sensorAmbientalStyle2D" pluralLabel="Sensor Ambiental Style 2Ds">
+      <rootActivity xsi:type="act:AGroup" label="Actions" ID="actions" pluralLabel="Actionss">
+        <members xsi:type="act:ARule" label="Default modelo Agent Style" ID="defaultmodeloAgentStyle" targets="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentColor']" selected="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentStyle']" agent="//@agents[ID='sensorAmbiental']" pluralLabel="Default modelo Agent Styles"/>
+        <members xsi:type="act:AEvaluate" label="Default modelo Agent Color" ID="defaultmodeloAgentColor" sources="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentStyle']" targets="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentShape']" selected="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentStyle']">
+          <function xsi:type="function:FGenericFunction" href="http://metaabm.org/core_library.metaabm#//@library[ID='coreFunctions']/@subs[ID='graphic']/@functions[ID='colorBlue']"/>
+        </members>
+        <members xsi:type="act:AEvaluate" label="Default modelo Agent Shape" ID="defaultmodeloAgentShape" sources="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentColor']" targets="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentPaint']" selected="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentStyle']">
+          <function xsi:type="function:FGenericFunction" href="http://metaabm.org/core_library.metaabm#//@library[ID='coreFunctions']/@subs[ID='graphic']/@functions[ID='shapeOval']"/>
+        </members>
+        <members xsi:type="act:AEvaluate" label="Default modelo Agent Paint" ID="defaultmodeloAgentPaint" sources="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentShape']" selected="//@agents[ID='sensorAmbiental']/@styles[ID='sensorAmbientalStyle2D']/@rootActivity/@members[ID='defaultmodeloAgentStyle']">
+          <function xsi:type="function:FGenericFunction" href="http://metaabm.org/core_library.metaabm#//@library[ID='coreFunctions']/@subs[ID='graphic']/@functions[ID='graphicFill']"/>
+        </members>
+      </rootActivity>
+      <implementation className="SensorAmbientalStyle2D"/>
+    </styles>
+  </agents>
+  <projections xsi:type="metaabm:SGrid" label="Espacio" ID="espacio" pluralLabel="Espacios" dimensionality="2" borderRule="PERIODIC" neighborhood="MOORE">
+    <attributes label="Ancho" ID="ancho" pluralLabel="Anchos" description="The horizontal extent of the space." defaultValue="100"/>
+    <attributes label="Largo" ID="largo" pluralLabel="Largos" description="The vertical extent of the space." defaultValue="100"/>
+  </projections>
+</metaabm:SContext>
